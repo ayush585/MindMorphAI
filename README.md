@@ -50,3 +50,12 @@ HTML, CSS, JavaScript, React (if used), Python, Flask/FastAPI (if backend includ
 ```bash
 git clone https://github.com/ayush585/MindMorph-AI.git
 cd MindMorph-AI
+
+
+![mmdit](https://github.com/user-attachments/assets/3ecf60db-81bb-400a-9257-415efc0500c8)
+![image](https://github.com/user-attachments/assets/a647c2b5-87c6-4b8d-a993-abc3b30b61cf)
+![image](https://github.com/user-attachments/assets/2cfb553b-29b5-4fbd-b0b8-d1a5d4024a7b)
+![image](https://github.com/user-attachments/assets/8d2be314-250d-4638-9a9d-27dc753f5e01)
+
+
+
