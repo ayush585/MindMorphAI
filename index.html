@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindMorph AI Image Generator Prototype</title>
+    <meta name="description" content="MindMorph AI Image Generator - Create stunning images from text prompts using advanced AI technology.">
+    <style>
+        body {
+            background: linear-gradient(135deg, #2a2a2a, #1c1c1c); /* Gradient background for depth */
+            font-family: 'Arial', sans-serif; /* Clean font */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            height: 100vh; /* Full height */
+            color: #fefae0; /* Light text color for better readability */
+        }
+
+        .container {
+            background: rgba(30, 30, 30, 0.9); /* Darker semi-transparent background */
+            padding: 50px; /* Increased padding for a more spacious layout */
+            border-radius: 20px; /* More pronounced rounded corners */
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8); /* Enhanced shadow for more depth */
+            text-align: center;
+            width: 90%;
+            max-width: 600px;
+            margin: 60px 20px 20px; /* Increased top margin to prevent overlap */
+        }
+
+        h1 {
+            color: #ffcc00; /* Brighter Gold for better visibility */
+            margin-bottom: 30px;
+            font-size: 3rem; /* Even larger heading for better visibility */
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap; /* Allows items to wrap */
+            gap: 10px; /* Reduced gap to avoid excessive spacing */
+            margin-bottom: 20px;
+        }
+
+        nav a {
+            background: linear-gradient(135deg, #ffcc00, #ff9900); /* Updated gradient for a fresher look */
+            color: #121212; /* Dark text for contrast */
+            font-weight: bold;
+            font-size: 1rem; /* Slightly bigger text */
+            text-decoration: none;
+            border-radius: 25px; /* Rounded corners for a smooth look */
+            transition: all 0.3s ease;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3); /* Soft shadow */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        nav a:hover {
+            background-color: #ffb300; /* More vibrant Gold on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Added shadow effect on hover */
+            transform: scale(1.05); /* Slightly enlarge on hover */
+        }
+
+        .dropbtn {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #FFA500; /* Light Orange Color */
+            color: #121212; /* Dark text */
+            border-radius: 25px; /* Rounded corners */
+            transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+            margin-top: -5px; /* Move the button up by 5 pixels */
+            min-width: 120px;
+        }
+
+        .dropbtn:hover {
+            background-color: #66BB6A; /* Lighter Green on hover */
+            transform: scale(1.05); /* Slightly enlarge on hover */
+        }
+
+        .section {
+            display: none;
+        }
+
+        .active {
+            display: block !important;
+        }
+
+        input {
+            width: 100%;
+            height: 40px; /* Set a specific height */
+            line-height: 1.5; /* Adjust line height for better vertical alignment */
+            margin-bottom: 20px;
+            border: 2px solid #ffca28; /* Lighter Gold */
+            border-radius: 25px; /* Rounded corners */
+            font-size: 1.1rem; /* Larger font size */
+            background-color: #fefae0; /* Off-White */
+            color: #283618; /* Dark Green */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+        }
+
+        button {
+            background: linear-gradient(135deg, #f9a825, #ffca28); /* Gradient for buttons */
+            color: #121212; /* Dark text */
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5); /* More pronounced shadow effect */
+            width: 200px; /* Updated width */
+
+        }
+
+        button:hover {
+            background-color: #ffca28; /* Lighter Gold on hover */
+            transform: scale(1.10); /* Slightly enlarge on hover */
+        }
+
+        .loader {
+            display: none;
+            margin: 20px auto;
+            border: 5px solid #f4caca;
+            border-top: 5px solid #f9a825; /* Gold loader */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        img {
+            max-width: 100%;
+            margin-top: 20px; /* Adjusted margin for better spacing */
+            border-radius: 10px; /* Added rounded corners for images */
+            border: 5px solid #606c38; /* Elegant border */
+            transition: transform 0.3s; /* Smooth zoom effect */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Added shadow effect to images */
+        }
+
+        img:hover {
+            transform: scale(1.05); /* Zoom on hover */
+        }
+
+        .example-container {
+            display: grid; /* Changed to grid for better layout */
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Responsive grid layout */
+            gap: 20px; /* Increased gap for better spacing */
+        }
+
+        footer {
+            margin-top: 40px; /* Increased margin for better spacing */
+            font-size: 1.1rem; /* Slightly larger font size for readability */
+            color: #fefae0; /* Light text color */
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .example-container img {
+                width: 100%; /* Full width on small screens */
+            }
+        }
+        #output-image {
+            display: none;
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+        }
+
+        img[alt="Generated image"]:not([src]) {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <nav style="margin-bottom: 40px; order: -1;">
+        <div class="dropdown">
+            <button class="dropbtn">Menu</button>
+            <div class="dropdown-content">
+                <a href="#" onclick="showSection('home')" style="padding: 8px 10px; font-size: 0.9rem;">🏠 Home</a>
+                <a href="#" onclick="showSection('about')" style="padding: 8px 10px; font-size: 0.9rem;"> About Me</a>
+                <a href="#" onclick="showSection('examples')" style="padding: 8px 10px; font-size: 0.9rem;">🖼️ Examples</a>
+                <a href="#" onclick="showSection('sauce')" style="padding: 8px 10px; font-size: 0.9rem;">🛠️ Sauce</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container section active" id="home" style="background: url('background-image.jpg') no-repeat center center; background-size: cover; padding: 20px;">
+    </div>
+
+    <h1 aria-label="MindMorph AI Image Generator">MindMorph AI Image Generator</h1>
+
+    <input type="text" id="prompt-input" placeholder="Enter your prompt here (e.g., a sunset over the mountains......)">
+    <button id="generate-button" aria-label="Generate Image">Generate Image!</button>
+
+    <div class="loader" id="loader"></div>
+    <img id="output-image" onclick="openModal(this)" alt="Generated image" aria-label="Generated image" />
+
+    <div id="image-modal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modal-image" style="border-radius: 15px;" alt="Generated image" title="Generated image"> <!-- Added title attribute for accessibility -->
+    </div>
+    </div>
+
+    <div class="container section" id="about" style="padding: 20px;">
+        <h1>About Me</h1>
+        <p>Hey there, I’m Ayushman Mukherjee and Im 15 years old and this is my first Hackathon!. I’m passionate about AI and technology, and I created MindMorph AI to make AI-powered image generation accessible and fun for everyone. Whether you’re an artist, cloth designer, or just someone who loves creativity, this tool is for you!</p>
+        <p aria-label="About Me">About Me: Just a young guy with an endless curiosity for technology and an obsession with creating cool things. If you told me a few years ago that I’d build an AI image generator and participate at Diversion's Hackathon, I’d probably laugh at you. But here we are.</p>
+        <p>This project isn’t just about generating images; it’s about bringing ideas to life. I’ve always been fascinated by technology. How it can turn imagination into reality. This is my way of proving that you don’t need a big team or a fancy degree to create something cool. Just passion, determination, help from friends you have never met before in person, and maybe a few late-night debugging sessions.</p>
+        <p>I built this because I believe creativity should be limitless. Whether you’re here for fun, inspiration, or just to see what AI can do, I hope you find something that sparks your imagination. After all, the best ideas come from the wildest dreams. And I had pretty wild dreams.</p>
+        <p>— Ayushman Mukherjee</p>
+    </div>
+
+    <div class="container section" id="examples" style="padding: 20px;">
+        <h1>Examples 🖼️</h1>
+        <p>Check out some AI-generated images:</p>
+        <div class="example-container" aria-label="Example Images">
+            <img src="https://res.cloudinary.com/djrdcibrl/image/upload/v1740161442/3e7431de-49cb-42fa-8ef9-365997aa702b_zeim1y.jpg" alt="AI-generated image of a scenic landscape" />
+            <img src="https://res.cloudinary.com/djrdcibrl/image/upload/v1740258063/70992a74-cff8-474d-b881-dbb9c06fd67a_wmfcyt.jpg" alt="AI-generated image" />
+            <img src="https://res.cloudinary.com/djrdcibrl/image/upload/v1740217388/20d602aa-1578-4d23-a2da-01fd99f17e3c_dsleox.jpg" alt="AI-generated image of an abstract art piece" />
+            <img src="https://res.cloudinary.com/djrdcibrl/image/upload/v1740218124/0c70974b-0cb9-4308-a7b4-6286bb3f6ac4_e9gori.jpg" alt="AI-generated image of a fantasy scene" />
+            <img src="https://res.cloudinary.com/djrdcibrl/image/upload/v1740294739/bbdd043b-70fb-4d39-b856-95533bba04f8_a8fobz.jpg" alt="AI-generated image of a snake" />
+            <img src="https://res.cloudinary.com/djrdcibrl/image/upload/v1740294927/1531b67c-71b4-47fc-ac65-6a45ce4c0f85_ayrmmc.jpg" alt="AI-generated image of a hulk comic" />        
+    </div>
+
+    <div class="container section" id="sauce" style="padding: 20px;">
+        <h1>Sauce - AI Technology</h1>
+        <p>MindMorph AI utilizes Stable Diffusion, a state-of-the-art AI model for generating high-quality images from text prompts. This project incorporates advanced deep learning techniques to transform your ideas into stunning visuals.</p>
+        <p>Training Data and Strategy: The model was trained on diverse datasets, including synthetic and filtered publicly available data to enhance its performance.</p>
+        <img src="https://res.cloudinary.com/djrdcibrl/image/upload/v1740218475/mmdit_q8otg8.png" alt="AI-generated image showcasing the MindMorph AI interface" title="MindMorph AI Interface" />
+    </div>
+
+    <footer aria-label="Footer">
+        <div class="social-media">
+            <a href="https://twitter.com/AYUSHMAN_Mukh" target="_blank" rel="noopener">Twitter</a>
+            <a href="https://facebook.com/profile.php?id=100090031842998" target="_blank" rel="noopener">Facebook</a>
+            <a href="https://instagram.com/Ochnoy_" target="_blank" rel="noopener">Instagram</a>
+            <a href="https://res.cloudinary.com/djrdcibrl/image/upload/v1740276740/Screenshot_2025-02-22_210933_w7runz.png" target="_blank" rel="noopener">Discord(username)</a>
+            <a href="https://www.linkedin.com/in/ayushman-mukherjee-437a49314/" target="_blank" rel="noopener">Linkedin</a>
+        </div>
+        &copy; 2025 MindMorph AI prototype. All rights reserved. | Designed with passion for creativity.
+        &copy; Made with love for Shirt designers and Comic writers.
+    </footer>
+
+    <script>
+        const TOKEN = "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"; // API Token for image generation
+        const API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-3.5-large";
+
+        document.getElementById("generate-button").addEventListener("click", async () => {
+            const prompt = document.getElementById("prompt-input").value;
+            const loader = document.getElementById("loader");
+            const outputImage = document.getElementById("output-image");
+            
+            if (!prompt) {
+                alert("Please enter a prompt!Cmon type it!");
+                return;
+            }
+            
+            loader.style.display = "block";
+            outputImage.style.display = "non e";
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${TOKEN}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ inputs: prompt })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to generate image.");
+                }
+
+                const blob = await response.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                
+                outputImage.src = imageUrl;
+                outputImage.style.display = "block";
+            } catch (error) {
+                console.error("Error:", error);
+            } finally {
+                loader.style.display = "none";
+            }
+        });
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            window.scrollTo(0, 0); // Smooth scroll to the top
+        }
+    </script>
+</body>
+</html>
